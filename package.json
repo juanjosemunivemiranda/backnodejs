@@ -1,0 +1,19 @@
+{
+  "name": "service_auth",
+  "version": "1.0.0",
+  "description": "Service Auth",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.2"
+  }
+}
