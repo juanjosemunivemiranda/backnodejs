@@ -179,13 +179,25 @@ const getRoomByRoomId = async (req, res) => {
     }
 
     if (decodedToken.user.ROLE === "STUDENT") {
-      if (!room.student.equals(decodedToken.user._id)) {
+      const isStudent = Array.isArray(room.student)
+        ? room.student.some((id) => id.equals(decodedToken.user._id))
+        : room.student.equals(decodedToken.user._id);
+
+      if (!isStudent) {
         return error(
           res,
           "Éste usuario no tiene permisos para acceder a la sala como Estudiante",
           400
         );
       }
+
+      // if (!room.student.equals(decodedToken.user._id)) {
+      //   return error(
+      //     res,
+      //     "Éste usuario no tiene permisos para acceder a la sala como Estudiante",
+      //     400
+      //   );
+      // }
     }
 
     if (decodedToken.user.ROLE === "OBSERVER") {

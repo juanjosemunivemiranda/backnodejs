@@ -47,7 +47,8 @@ const getAllGroups = async (filter) => {
         .limit(itemsPerPage)
         .populate("institution", "_id name")
         .populate("createdBy", "_id name")
-        .populate("professors", "_id name"),
+        .populate("professors", "_id name")
+        .populate("rooms", "roomId"),
       Groups.countDocuments(searchQuery),
     ]);
 

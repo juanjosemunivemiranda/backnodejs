@@ -88,31 +88,66 @@ const addGroup = async (req, res) => {
       configuration,
     });
 
-    // crear las salas por cada estudiante
-    let rooms = [];
+    // // crear las salas por cada estudiante
+    // let rooms = [];
 
-    students.forEach((student) => {
-      console.log("🚀 ~ addGroup ~ student:", student);
-      const roomId = `${newGroup._id.toString().slice(-6)}-${student._id
-        .toString()
-        .slice(-6)}-${Date.now().toString().slice(-6)}`;
+    // students.forEach((student) => {
+    //   console.log("🚀 ~ addGroup ~ student:", student);
+    //   const roomId = `${newGroup._id.toString().slice(-6)}-${student._id
+    //     .toString()
+    //     .slice(-6)}-${Date.now().toString().slice(-6)}`;
 
-      let room = {
-        roomId,
-        group: newGroup._id,
-        student: student._id,
-        professor: newGroup.professors[0]._id,
-        observer,
-        date: date,
-        configuration: configuration,
-        isActive: true,
-      };
-      rooms.push(room);
-    });
+    //   let room = {
+    //     roomId,
+    //     group: newGroup._id,
+    //     student: student._id,
+    //     professor: newGroup.professors[0]._id,
+    //     observer,
+    //     date: date,
+    //     configuration: configuration,
+    //     isActive: true,
+    //   };
+    //   rooms.push(room);
+    // });
 
-    if (rooms.length > 0) {
-      await roomService.addManyRooms(rooms);
-    }
+    // if (rooms.length > 0) {
+    //   await roomService.addManyRooms(rooms);
+    // }
+
+    // crear sala con estudiantes
+    const roomId = `${newGroup._id
+      .toString()
+      .slice(-6)}-${newGroup.professors[0]._id
+      .toString()
+      .slice(-6)}-${Date.now().toString().slice(-6)}`;
+
+    let room = {
+      roomId,
+      group: newGroup._id,
+      student: students,
+      professor: newGroup.professors[0]._id,
+      observer,
+      date: date,
+      configuration: configuration,
+      isActive: true,
+    };
+
+    const newRoom = await roomService.addRoom(room);
+    console.log("🚀 ~ addGroup ~ newRoom:", newRoom);
+
+    const roomOnGroup = {
+      _id: newGroup._id,
+      rooms: [newRoom._id],
+    };
+    console.log("🚀 ~ addGroup ~ roomOnGroup:", roomOnGroup);
+
+    const updateGroupRoom = await groupService.updateGroup(roomOnGroup);
+
+    console.log("🚀 ~ addGroup ~ updateGroupRoom:", updateGroupRoom);
+    if (!updateGroupRoom)
+      return error(res, "No se pudo enlazar la sala al grupo", 400);
+
+    if (!newRoom) return error(res, "No se pudo crear la sala", 410);
 
     success(res, newGroup, "Grupo creado exitosamente", 200);
   } catch (e) {

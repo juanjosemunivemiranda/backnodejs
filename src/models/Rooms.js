@@ -8,11 +8,13 @@ const RoomSchema = new mongoose.Schema(
       ref: "Group",
       required: true,
     },
-    student: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    student: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+    ],
     professor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

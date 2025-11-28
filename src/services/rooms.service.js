@@ -25,9 +25,11 @@ const getAllRooms = async (decodedToken) => {
   const { ROLE, _id } = decodedToken.user;
   let filter = {};
 
+  console.log("🚀 ~ getAllRooms ~ ROLE:", ROLE);
   if (ROLE === "PROFESSOR") filter = { professor: _id };
   if (ROLE === "STUDENT") filter = { student: _id };
-  if (ROLE === "OBSERVER") filter = { professor: _id };
+  if (ROLE === "OBSERVER") filter = { observer: _id };
+  console.log("🚀 ~ getAllRooms ~ filter:", filter);
 
   return await Rooms.find(filter)
     .populate("professor", "_id name")
